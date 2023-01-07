@@ -2,14 +2,14 @@
 
 int main(){
 	// shaders
-	const char *vertexShader = "#version 330 core\n"
+	char *vertexShader = "#version 330 core\n"
 	"layout (location = 0) in vec3 aPos;\n"
 	"void main()\n"
 	"{\n"
 	"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 	"}\0";
-	const char *fragShader = "#version 330 core\n"
-	"out vec4 FragColor\n"
+	char *fragShader = "#version 330 core\n"
+	"out vec4 FragColor;\n"
 	"void main()\n"
 	"{\n"
 	"FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
@@ -23,9 +23,9 @@ int main(){
 		0.0f, 0.5f, 0.0f
 	};
 	GameObject triangle = GameObject(vertic);
-	nx.addObject(triangle);
 	triangle.addVShader(vertex);
 	triangle.addFShader(frag);
+	nx.addObject(triangle);
 	nx.compileShaders();
 	nx.updateBackground(0.3,0.4,0.7,1);
 	while(1)

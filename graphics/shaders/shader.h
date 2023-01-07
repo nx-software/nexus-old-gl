@@ -2,9 +2,10 @@
 #define SHADER_H
 class Shader{
 public:
-	const char* data;
-	Shader(const char* data){
+	char* data;
+	Shader(char* data){
 		this->data = data;
 	}
+	
 };
 #endif

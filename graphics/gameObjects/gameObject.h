@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include "../shaders/shader.h"
 #include <vector>
+#include <iostream>
 class GameObject{
 private:
 	int sizeOfArray(float array[]){
@@ -12,17 +13,18 @@ private:
 		return i;
 	}
 public:
-	std::vector<Shader> vShader;
-	std::vector<Shader> fShader;
+	Shader vShader = Shader("EMPTY_SHADER");
+	Shader fShader = Shader("EMPTY_SHADER");
+	unsigned int shaderProg;
 	float vert[90000];
 	GameObject(float vert[]){
 		memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
 	}
 	void addVShader(Shader s){
-		vShader.push_back(s);
+		this->vShader = s;
 	}
 	void addFShader(Shader s){
-		fShader.push_back(s);
+		this->fShader = s;
 	}
 };
 #endif

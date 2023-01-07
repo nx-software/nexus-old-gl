@@ -20,7 +20,7 @@ public:
 		gr.initGameObj(gameObjs);
 	}
 	void updateGraphics(){
-		gr.nextTick();
+		gr.nextTick(gameObjs);
 	}
 	void updateBackground(float x, float y, float z, float a){
 		this->gr.colorX = x;
@@ -34,8 +34,9 @@ public:
 	
 	void compileShaders(){
 		for(int i = 0; i < gameObjs.size(); i++){
-			gr.compShadersAndCreateShaderProgram(gameObjs[i].vShader, gameObjs[i].fShader);
+			gr.compShadersAndCreateShaderProgram(gameObjs[i].vShader, gameObjs[i].fShader,gameObjs[i]);
 		}
+		initGameObj();
 	}
 };
 #endif

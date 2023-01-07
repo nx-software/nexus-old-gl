@@ -15,6 +15,7 @@ private:
 	char* name;
 public:
 	float colorX, colorY, colorZ, colorA;
+	unsigned int VAO, VBO;
 	Graphics_System(char* name, int width, int height){
 		this->name = name;
 		this->width = width;
@@ -41,8 +42,9 @@ public:
 		}
 		// Init viewport
 		glViewport(0,0,this->width,this->height);
+		
 	}
-	void nextTick(){
+	void nextTick(std::vector<GameObject> gObs){
 		processInput();
 		// Color 
 		if(colorX && colorY && colorZ && colorA){
@@ -51,6 +53,11 @@ public:
 			glClearColor(0.2f,0.3f,0.3f,1.0f);
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
+		for(int i = 0; i < gObs.size(); i++){
+			glUseProgram(gObs[i].shaderProg);
+			glBindVertexArray(VAO);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
 		
@@ -61,36 +68,47 @@ public:
 	}
 	void initGameObj(std::vector<GameObject> gameObjs){
 		for(int i = 0; i < gameObjs.size(); i++){
-			unsigned int VBO; // create VBO for gameobject
+			glGenVertexArrays(1, &VAO);
+			glBindVertexArray(VAO);
 			glGenBuffers(1, &VBO); // create gl buffer for the VBO
 			glBindBuffer(GL_ARRAY_BUFFER, VBO); // whenever we add to the array buffer
 			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i].vert), gameObjs[i].vert, GL_STATIC_DRAW); // copy VBO to array buffer
+			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
 		}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
-	void checkShaderStatus(unsigned int shader){
+	void checkShaderStatus(unsigned int shader, Shader s){
 		int success;
 		char infoLog[512]; // error message
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if(!success){
 			glGetShaderInfoLog(shader, 512, NULL, infoLog); // get error
 			std::cout << "Error compile shader: " << infoLog << "\n";
+			std::cout << "Shader data: \n";
+			std::cout << s.data << "\n";
 		}
 	}
-	void compShadersAndCreateShaderProgram(std::vector<Shader> vShader, std::vector<Shader> fShader, GameObject gameObject){
+	void compShadersAndCreateShaderProgram(Shader vShader, Shader fShader, GameObject gameObject){
+		gameObject.shaderProg = glCreateProgram();
 		unsigned int cShader;
-		for(int i = 0; i < vShader.size(); i++){			
-			cShader = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(cShader, 1, &vShader[i].data, NULL);
-			glCompileShader(cShader); // compile the shader
-			checkShaderStatus(cShader);
-		}
-		for(int i = 0; i < fShader.size(); i++){			
-			cShader = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(cShader, 1, &fShader[i].data, NULL);
-			glCompileShader(cShader); // compile the shader
-			checkShaderStatus(cShader);
-		}
-		// we now create an epic shader program so we can link them together
+		cShader = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(cShader, 1, &vShader.data, NULL);
+		glCompileShader(cShader); // compile the shader
+		checkShaderStatus(cShader,vShader);
+		// attach shaders to program 
+		glAttachShader(gameObject.shaderProg, cShader);
+		//
+		cShader = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(cShader, 1, &fShader.data, NULL);
+		glCompileShader(cShader); // compile the shader
+		checkShaderStatus(cShader,fShader);
+		// attach shaders to program 
+		glAttachShader(gameObject.shaderProg, cShader);
+		//
+		glLinkProgram(gameObject.shaderProg);
+		glDeleteShader(cShader);
 		
 	}
 };
