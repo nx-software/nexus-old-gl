@@ -13,11 +13,10 @@ private:
 		return i;
 	}
 public:
-	Shader vShader = Shader("EMPTY_SHADER");
-	Shader fShader = Shader("EMPTY_SHADER");
+	Shader s = Shader("","");
 	unsigned int shaderProg;
 	float vert[50];
-	GameObject(float vert[]){
+	GameObject(float vert[], char* vShaderName, char* fShaderName){
 		//memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
 		for(int i = 0; i < 50; i++){
 			this->vert[i] = vert[i]; 
@@ -27,12 +26,10 @@ public:
 				printf("%f | ",vert[i]); 
 		}
 		printf("\n");
+		this->s = Shader(vShaderName, fShaderName);
+		printf("[gameObject] Gameobject read vertex shader (from src %s) as follows: \n%s\n",vShaderName,this->s.vShaderSrc);
+		printf("[gameObject] Gameobject read frag shader (from src %s) as follows: \n%s\n",fShaderName,this->s.fShaderSrc);
 	}
-	void addVShader(Shader s){
-		this->vShader = s;
-	}
-	void addFShader(Shader s){
-		this->fShader = s;
-	}
+	
 };
 #endif

@@ -34,7 +34,8 @@ public:
 	
 	void compileShaders(){
 		for(int i = 0; i < gameObjs.size(); i++){
-			gr.compShadersAndCreateShaderProgram(gameObjs[i].vShader, gameObjs[i].fShader,&gameObjs[i]);
+			printf("Now comp shader read ya frag file like: \n%s\n",gameObjs[i].s.fShaderSrc);
+			gr.compShadersAndCreateShaderProgram(gameObjs[i].s, &gameObjs[i]);
 			if(gameObjs[i].shaderProg == NULL)
 				std::cout<< "SHADER PROGRAM IS NULL, THIS SHOULD NOT OCCUR!\n";
 			else
