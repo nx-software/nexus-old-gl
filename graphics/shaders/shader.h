@@ -11,10 +11,11 @@ class Shader{
 public:
 	// program ID
 	unsigned int ID;
-	char* vShaderSrc;
-	char* fShaderSrc;
+	std::string vShaderSrc;
+	std::string fShaderSrc;
 	char* vertexFName;
 	char* fragFName;
+	Shader(){}
 	Shader(char* vertexSP, char* fragSP){
 		this->vertexFName = vertexSP;
 		this->fragFName = fragSP;
@@ -36,8 +37,8 @@ public:
 			fread(fragShaderData, sizeof(fragShaderData), 1, fragFile);
 			vShaderSrc = vertexShaderData;
 			fShaderSrc = fragShaderData;
-			//vShaderSrc[sizeOfVFile] = '\0';
-			//fShaderSrc[sizeOfFFile] = '\0';
+			vShaderSrc[sizeOfVFile+1] = '\0';
+			fShaderSrc[sizeOfFFile+1] = '\0';
 			printf("READ VERTEX FILE AS FOLLOWS: \n");
 			printf("%s\n",vShaderSrc);
 			printf("===============================\n");

@@ -87,9 +87,9 @@ public:
 			glGetShaderInfoLog(shader, 512, NULL, infoLog); // get error
 			std::cout << "Error compile shader: " << infoLog << "\n";
 			std::cout << "Vertex Shader data: \n";
-			printf("%s\n",s.vShaderSrc);
+			printf("%s\n",s.vShaderSrc.c_str());
 			std::cout << "Frag Shader data\n";
-			printf("%s\n",s.fShaderSrc);
+			printf("%s\n",s.fShaderSrc.c_str());
 			printf("===================================\n");
 		}
 	}
@@ -103,17 +103,19 @@ public:
 		}
 	}
 	void compShadersAndCreateShaderProgram(Shader shader, GameObject* gameObject){
+		const char* vShade = shader.vShaderSrc.c_str();
+		const char* fShade = shader.fShaderSrc.c_str();
 		gameObject->shaderProg = glCreateProgram();
 		unsigned int cShader;
 		cShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(cShader, 1, &shader.vShaderSrc, NULL);
+		glShaderSource(cShader, 1, &vShade, NULL);
 		glCompileShader(cShader); // compile the shader
 		checkShaderStatus(cShader,shader);
 		// attach shaders to program 
 		glAttachShader(gameObject->shaderProg, cShader);
 		//
 		cShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(cShader, 1, &shader.fShaderSrc, NULL);
+		glShaderSource(cShader, 1, &fShade, NULL);
 		glCompileShader(cShader); // compile the shader
 		checkShaderStatus(cShader,shader);
 		// attach shaders to program 

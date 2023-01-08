@@ -9,6 +9,7 @@ int main(){
 		0.0f, 0.5f, 0.0f
 	};
 	GameObject triangle = GameObject(vertic,"vShader.vf","fShader.ff");
+	printf("{MAIN} FRAG: \n%s\n",triangle.s.fShaderSrc);
 	nx.addObject(triangle);
 	nx.compileShaders();
 	nx.updateBackground(0.3,0.4,0.7,1);
