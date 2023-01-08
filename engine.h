@@ -34,7 +34,11 @@ public:
 	
 	void compileShaders(){
 		for(int i = 0; i < gameObjs.size(); i++){
-			gr.compShadersAndCreateShaderProgram(gameObjs[i].vShader, gameObjs[i].fShader,gameObjs[i]);
+			gr.compShadersAndCreateShaderProgram(gameObjs[i].vShader, gameObjs[i].fShader,&gameObjs[i]);
+			if(gameObjs[i].shaderProg == NULL)
+				std::cout<< "SHADER PROGRAM IS NULL, THIS SHOULD NOT OCCUR!\n";
+			else
+				printf("unsigned int shaderProg is not null and is %x\n",gameObjs[i].shaderProg);
 		}
 		initGameObj();
 	}

@@ -16,9 +16,17 @@ public:
 	Shader vShader = Shader("EMPTY_SHADER");
 	Shader fShader = Shader("EMPTY_SHADER");
 	unsigned int shaderProg;
-	float vert[90000];
+	float vert[50];
 	GameObject(float vert[]){
-		memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
+		//memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
+		for(int i = 0; i < 50; i++){
+			this->vert[i] = vert[i]; 
+			if(i % 10 == 0)
+				printf("%f\n",vert[i]); 
+			else
+				printf("%f | ",vert[i]); 
+		}
+		printf("\n");
 	}
 	void addVShader(Shader s){
 		this->vShader = s;

@@ -90,24 +90,34 @@ public:
 			std::cout << s.data << "\n";
 		}
 	}
-	void compShadersAndCreateShaderProgram(Shader vShader, Shader fShader, GameObject gameObject){
-		gameObject.shaderProg = glCreateProgram();
+	void checkLinkStatus(unsigned int shaderProg){
+		int success;
+		char infoLog[512]; // error
+		glGetProgramiv(shaderProg, GL_LINK_STATUS, &success);
+		if(!success){
+			glGetProgramInfoLog(shaderProg, 512, NULL, infoLog); // get error
+			std::cout << "Error link shader prog: " << infoLog << "\n";
+		}
+	}
+	void compShadersAndCreateShaderProgram(Shader vShader, Shader fShader, GameObject* gameObject){
+		gameObject->shaderProg = glCreateProgram();
 		unsigned int cShader;
 		cShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(cShader, 1, &vShader.data, NULL);
 		glCompileShader(cShader); // compile the shader
 		checkShaderStatus(cShader,vShader);
 		// attach shaders to program 
-		glAttachShader(gameObject.shaderProg, cShader);
+		glAttachShader(gameObject->shaderProg, cShader);
 		//
 		cShader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(cShader, 1, &fShader.data, NULL);
 		glCompileShader(cShader); // compile the shader
 		checkShaderStatus(cShader,fShader);
 		// attach shaders to program 
-		glAttachShader(gameObject.shaderProg, cShader);
+		glAttachShader(gameObject->shaderProg, cShader);
 		//
-		glLinkProgram(gameObject.shaderProg);
+		glLinkProgram(gameObject->shaderProg);
+		checkLinkStatus(gameObject->shaderProg);
 		glDeleteShader(cShader);
 		
 	}
