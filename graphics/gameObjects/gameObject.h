@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "../shaders/shader.h"
+#include "../textures/texture.h"
 #include <vector>
 #include <iostream>
 class GameObject{
@@ -16,7 +17,8 @@ public:
 	Shader s;
 	unsigned int shaderProg;
 	float vert[50];
-	GameObject(float vert[], char* vShaderName, char* fShaderName){
+	texture Tex;
+	GameObject(float vert[], char* vShaderName, char* fShaderName, char* texName){
 		//memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
 		for(int i = 0; i < 50; i++){
 			this->vert[i] = vert[i]; 
@@ -26,7 +28,7 @@ public:
 				printf("%f | ",vert[i]); 
 		}
 		printf("\n");
-		
+		Tex = texture(texName);
 		s = Shader(vShaderName, fShaderName);
 		printf("[gameObject] Gameobject read frag shader (from src %s) as follows: \n%s\n",fShaderName,this->s.fShaderSrc);
 		printf("[gameObject] Gameobject read vertex shader (from src %s) as follows: \n%s\n",vShaderName,this->s.vShaderSrc);

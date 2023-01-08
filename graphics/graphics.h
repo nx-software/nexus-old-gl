@@ -3,6 +3,7 @@
 #include "glad/include/glad/glad.h"
 #include "gameObjects/gameObject.h"
 #include "shaders/shader.h"
+#include "textures/texture.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <list>
@@ -54,6 +55,7 @@ public:
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
 		for(int i = 0; i < gObs.size(); i++){
+			glBindTexture(GL_TEXTURE_2D, gObs[i].Tex.textureID);
 			glUseProgram(gObs[i].shaderProg);
 			glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -75,6 +77,12 @@ public:
 			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i].vert), gameObjs[i].vert, GL_STATIC_DRAW); // copy VBO to array buffer
 			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			glEnableVertexAttribArray(2); // 2
+			// init texture
+			loadGLTexture(gameObjs[i].Tex);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -85,6 +93,7 @@ public:
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if(!success){
 			glGetShaderInfoLog(shader, 512, NULL, infoLog); // get error
+			printf("===================================\n");
 			std::cout << "Error compile shader: " << infoLog << "\n";
 			std::cout << "Vertex Shader data: \n";
 			printf("%s\n",s.vShaderSrc.c_str());
@@ -124,7 +133,27 @@ public:
 		glLinkProgram(gameObject->shaderProg);
 		checkLinkStatus(gameObject->shaderProg);
 		glDeleteShader(cShader);
+	}
+	void loadGLTexture(texture Tex){
+		glGenTextures(1, &Tex.textureID);
+		glBindTexture(GL_TEXTURE_2D, Tex.textureID);
 		
+		// set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// gen texture
+		if(Tex.data){
+			// load tex
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Tex.width, Tex.height, 0, GL_RGB, GL_UNSIGNED_BYTE, Tex.data);
+			// generate mipmap
+			glGenerateMipmap(GL_TEXTURE_2D);
+			//
+			
+		}else{
+			printf("Failed to generate texture.\n");
+		}
 	}
 };
 #endif

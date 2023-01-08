@@ -37,11 +37,11 @@ public:
 			fread(fragShaderData, sizeof(fragShaderData), 1, fragFile);
 			vShaderSrc = vertexShaderData;
 			fShaderSrc = fragShaderData;
-			vShaderSrc[sizeOfVFile+1] = '\0';
-			fShaderSrc[sizeOfFFile+1] = '\0';
-			printf("READ VERTEX FILE AS FOLLOWS: \n");
-			printf("%s\n",vShaderSrc);
-			printf("===============================\n");
+			vShaderSrc[sizeOfVFile] = '\0';
+			fShaderSrc[sizeOfFFile] = '\0';
+			//printf("READ VERTEX FILE AS FOLLOWS: \n");
+			//printf("%s\n",vShaderSrc);
+			//printf("===============================\n");
 		}else{
 			printf("Error occured when trying to get shader files. File not found!\n");
 			if(vertFile == NULL){

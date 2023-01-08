@@ -3,6 +3,7 @@
 #include "graphics/graphics.h"
 #include "graphics/gameObjects/gameObject.h"
 #include "graphics/shaders/shader.h"
+#include "graphics/textures/texture.h"
 #include <list>
 class Nexus{
 private:
