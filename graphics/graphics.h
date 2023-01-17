@@ -4,6 +4,13 @@
 #include "gameObjects/gameObject.h"
 #include "shaders/shader.h"
 #include "textures/texture.h"
+#include "../utils/utils.h"
+// transform
+#include "transform/glm/glm.hpp"
+#include "transform/glm/ext/matrix_transform.hpp"
+#include "transform/glm/gtc/type_ptr.hpp"
+#include "transform/transform.h"
+//
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <list>
@@ -22,6 +29,10 @@ public:
 		this->width = width;
 		this->height = height;
 	}
+	/*
+		INITGL(VOID)
+		Creates window and inits GL (no way?)
+	*/
 	int initGL(){
 		// Initilize GLFW
 		glfwInit();
@@ -43,8 +54,13 @@ public:
 		}
 		// Init viewport
 		glViewport(0,0,this->width,this->height);
-		
 	}
+	/*
+		Updates graphics, including:
+			- Background color
+			- Models
+			- Shaders && Textures
+	*/
 	void nextTick(std::vector<GameObject> gObs){
 		processInput();
 		// Color 
@@ -57,6 +73,7 @@ public:
 		for(int i = 0; i < gObs.size(); i++){
 			glBindTexture(GL_TEXTURE_2D, gObs[i].Tex.textureID);
 			glUseProgram(gObs[i].shaderProg);
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i].shaderProg, "transform"), 1, GL_FALSE, glm::value_ptr(gObs[i].transform));
 			glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
@@ -64,10 +81,17 @@ public:
 		glfwPollEvents();
 		
 	}
+	/*
+		In future versions of Nexus this will be used to tell the game 
+		what keys have been pressed
+	*/
 	void processInput(){
 		if(glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			std::cout << "ESCAPE\n";
+			exit(0);
 	}
+	/*
+		Create a gameobject-
+	*/
 	void initGameObj(std::vector<GameObject> gameObjs){
 		for(int i = 0; i < gameObjs.size(); i++){
 			glGenVertexArrays(1, &VAO);
@@ -82,11 +106,14 @@ public:
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 			glEnableVertexAttribArray(2); // 2
 			// init texture
-			loadGLTexture(gameObjs[i].Tex);
+			loadGLTexture(&gameObjs[i].Tex);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
+	/*
+		Check if shader compiled correctly
+	*/
 	void checkShaderStatus(unsigned int shader, Shader s){
 		int success;
 		char infoLog[512]; // error message
@@ -100,8 +127,12 @@ public:
 			std::cout << "Frag Shader data\n";
 			printf("%s\n",s.fShaderSrc.c_str());
 			printf("===================================\n");
+			exit(1);	
 		}
 	}
+	/*
+		Check if link shaders completed successfully
+	*/
 	void checkLinkStatus(unsigned int shaderProg){
 		int success;
 		char infoLog[512]; // error
@@ -111,6 +142,9 @@ public:
 			std::cout << "Error link shader prog: " << infoLog << "\n";
 		}
 	}
+	/*
+		Compile shaders
+	*/
 	void compShadersAndCreateShaderProgram(Shader shader, GameObject* gameObject){
 		const char* vShade = shader.vShaderSrc.c_str();
 		const char* fShade = shader.fShaderSrc.c_str();
@@ -134,9 +168,12 @@ public:
 		checkLinkStatus(gameObject->shaderProg);
 		glDeleteShader(cShader);
 	}
-	void loadGLTexture(texture Tex){
-		glGenTextures(1, &Tex.textureID);
-		glBindTexture(GL_TEXTURE_2D, Tex.textureID);
+	/*
+		Load texture
+	*/
+	void loadGLTexture(texture* Tex){
+		glGenTextures(1, &Tex->textureID);
+		glBindTexture(GL_TEXTURE_2D, Tex->textureID); // any options applied to GL_TEXTURE_2D will be set to the Texture ID provided
 		
 		// set texture options
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -144,9 +181,9 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		// gen texture
-		if(Tex.data){
+		if(Tex->data){
 			// load tex
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Tex.width, Tex.height, 0, GL_RGB, GL_UNSIGNED_BYTE, Tex.data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Tex->width, Tex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, Tex->data);
 			// generate mipmap
 			glGenerateMipmap(GL_TEXTURE_2D);
 			//

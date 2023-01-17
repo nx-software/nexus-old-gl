@@ -12,6 +12,9 @@ public:
 	std::vector<GameObject> gameObjs;
 	
 	Nexus(char* name, int width, int height){
+		printf("=============================\n");
+		printf("       NEXUS 3D ENGINE       \n");
+		printf("=============================\n");
 		gr = Graphics_System(name, width, height);
 		int f = gr.initGL();
 		if(f == -1)
@@ -32,18 +35,19 @@ public:
 	void addObject(GameObject obj){
 		gameObjs.push_back(obj);
 	}
-	
 	void compileShaders(){
 		for(int i = 0; i < gameObjs.size(); i++){
-			printf("Now comp shader read ya frag file like: \n%s\n",gameObjs[i].s.fShaderSrc);
+			//printf("Now comp shader read ya frag file like: \n%s\n",gameObjs[i].s.fShaderSrc);
 			gr.compShadersAndCreateShaderProgram(gameObjs[i].s, &gameObjs[i]);
 			if(gameObjs[i].shaderProg == NULL)
 				std::cout<< "SHADER PROGRAM IS NULL, THIS SHOULD NOT OCCUR!\n";
-			else
-				printf("unsigned int shaderProg is not null and is %x\n",gameObjs[i].shaderProg);
+			//else
+			//	printf("unsigned int shaderProg is not null and is %x\n",gameObjs[i].shaderProg);
 		}
 		initGameObj();
 	}
+	void loadScript(char* fileName){
+	//	Script = new Script(fileName, this);
+	}
 };
 #endif
-
