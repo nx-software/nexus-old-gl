@@ -23,11 +23,16 @@ private:
 	char* name;
 public:
 	float colorX, colorY, colorZ, colorA;
+	GLfloat fov = 45.0f, near = 0.1f, far = 100.0f;
 	unsigned int VAO, VBO;
+	// create matrices (matrix refrence no way???) for our projecion (in this case perspective) and view
+	glm::mat4 view = glm::mat4(1.0f);
+	//glm::mat4 projection;
 	Graphics_System(char* name, int width, int height){
 		this->name = name;
 		this->width = width;
 		this->height = height;
+		//this->projection = glm::perspective(glm::radians(fov), (GLfloat)height / width, near, far);
 	}
 	/*
 		INITGL(VOID)
@@ -61,7 +66,7 @@ public:
 			- Models
 			- Shaders && Textures
 	*/
-	void nextTick(std::vector<GameObject> gObs){
+	void nextTick(std::vector<GameObject*> gObs){
 		processInput();
 		// Color 
 		if(colorX && colorY && colorZ && colorA){
@@ -71,15 +76,24 @@ public:
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
 		for(int i = 0; i < gObs.size(); i++){
-			glBindTexture(GL_TEXTURE_2D, gObs[i].Tex.textureID);
-			glUseProgram(gObs[i].shaderProg);
-			glUniformMatrix4fv(glGetUniformLocation(gObs[i].shaderProg, "transform"), 1, GL_FALSE, glm::value_ptr(gObs[i].transform));
+			glBindTexture(GL_TEXTURE_2D, gObs[i]->Tex.textureID);
+			glUseProgram(gObs[i]->shaderProg);
+			// perspective / transformation stuff
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "transform"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
+			//glUnifromMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "
+			// 
 			glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
 		
+	}
+	/*
+		Gets time from GLFW
+	*/
+	float getTime(){
+		return (float)glfwGetTime();
 	}
 	/*
 		In future versions of Nexus this will be used to tell the game 
@@ -92,13 +106,13 @@ public:
 	/*
 		Create a gameobject-
 	*/
-	void initGameObj(std::vector<GameObject> gameObjs){
+	void initGameObj(std::vector<GameObject*> gameObjs){
 		for(int i = 0; i < gameObjs.size(); i++){
 			glGenVertexArrays(1, &VAO);
 			glBindVertexArray(VAO);
 			glGenBuffers(1, &VBO); // create gl buffer for the VBO
 			glBindBuffer(GL_ARRAY_BUFFER, VBO); // whenever we add to the array buffer
-			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i].vert), gameObjs[i].vert, GL_STATIC_DRAW); // copy VBO to array buffer
+			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i]->vert), gameObjs[i]->vert, GL_STATIC_DRAW); // copy VBO to array buffer
 			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -106,7 +120,7 @@ public:
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 			glEnableVertexAttribArray(2); // 2
 			// init texture
-			loadGLTexture(&gameObjs[i].Tex);
+			loadGLTexture(&gameObjs[i]->Tex);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

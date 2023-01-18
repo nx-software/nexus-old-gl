@@ -47,16 +47,22 @@ public:
 		//printf("[gameObject] Gameobject read vertex shader (from src %s) as follows: \n%s\n",vShaderName,this->s.vShaderSrc);
 	}
 	void rotate(float degrees, enum rotationAxis rA){
-		glm::vec3 a = glm::vec3(0.0,0.0,0.0);
+		glm::vec3 a = glm::vec3(0.0,0.0,1.0);
 		switch(rA){
-			case 0:
+			case AXIS_X:
 				a = glm::vec3(1.0,0.0,0.0);
-			case 1:
+				break;
+			case AXIS_Y:
 				a = glm::vec3(0.0,1.0,0.0);
-			case 2:
+				break;
+			case AXIS_Z:
 				a = glm::vec3(0.0,0.0,1.0);
+				break;
+			default:
+				a = glm::vec3(0.0,0.0,1.0);
+				break;
 		}
-		this->transform = tr_rotate(this->transform, degrees,a);
+		this->transform = tr_rotate(this->transform, degrees, a);
 	}
 };
 #endif

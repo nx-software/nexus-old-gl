@@ -9,9 +9,13 @@ int main(){
 	};
 	// GAMEOBJECT REQUIRES:      model name|vertices|vertex shader|frag shader|texture name
 	GameObject triangle = GameObject("model1",vert,"vShader.vf","fShader.ff","left.jpg");
-	nx.addObject(triangle);
+	nx.addObject(&triangle);
 	nx.compileShaders();
+	triangle.rotate(45.0f,AXIS_Z);
 	nx.updateBackground(0.3,0.4,0.7,1);
-	while(1)
+	while(1){
 		nx.updateGraphics();
+		triangle.rotate(nx.getTime(),AXIS_Z);
+	}
+	return 0;
 }

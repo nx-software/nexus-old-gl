@@ -9,7 +9,7 @@ class Nexus{
 private:
 	Graphics_System gr = Graphics_System("NULL",0,0);
 public:
-	std::vector<GameObject> gameObjs;
+	std::vector<GameObject*> gameObjs;
 	
 	Nexus(char* name, int width, int height){
 		printf("=============================\n");
@@ -32,14 +32,14 @@ public:
 		this->gr.colorZ = z;
 		this->gr.colorA = a;
 	}
-	void addObject(GameObject obj){
+	void addObject(GameObject* obj){
 		gameObjs.push_back(obj);
 	}
 	void compileShaders(){
 		for(int i = 0; i < gameObjs.size(); i++){
 			//printf("Now comp shader read ya frag file like: \n%s\n",gameObjs[i].s.fShaderSrc);
-			gr.compShadersAndCreateShaderProgram(gameObjs[i].s, &gameObjs[i]);
-			if(gameObjs[i].shaderProg == NULL)
+			gr.compShadersAndCreateShaderProgram(gameObjs[i]->s, gameObjs[i]);
+			if(gameObjs[i]->shaderProg == NULL)
 				std::cout<< "SHADER PROGRAM IS NULL, THIS SHOULD NOT OCCUR!\n";
 			//else
 			//	printf("unsigned int shaderProg is not null and is %x\n",gameObjs[i].shaderProg);
@@ -48,6 +48,9 @@ public:
 	}
 	void loadScript(char* fileName){
 	//	Script = new Script(fileName, this);
+	}
+	float getTime(){
+		return gr.getTime();
 	}
 };
 #endif
