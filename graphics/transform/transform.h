@@ -8,7 +8,7 @@
 	vectors are cool objects with *magnitude* and *direction* like 5 mph east
 	         /\              <- very cool arrow
 	         /
-	        /
+	        /  
 	now we can find the dot product
 	whats a dot product????/??///// dikf gidjg
 	it takes two vector and returns a scaler, like the equation for work
@@ -17,7 +17,7 @@
 	P = V * V * cos theta
 	i see some simallarites here
 */
-// basic transforms
+// basic transforms (just call glm::rotate)
 glm::mat4 tr_rotate(glm::mat4 original, float degrees, glm::vec3 axis){
 	return glm::rotate(original, glm::radians(degrees), axis);
 }

@@ -11,7 +11,7 @@ private:
 public:
 	std::vector<GameObject*> gameObjs;
 	
-	Nexus(char* name, int width, int height){
+	Nexus(char* name, float width, float height){
 		printf("=============================\n");
 		printf("       NEXUS 3D ENGINE       \n");
 		printf("=============================\n");

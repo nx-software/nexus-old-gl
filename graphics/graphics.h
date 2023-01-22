@@ -24,15 +24,17 @@ private:
 public:
 	float colorX, colorY, colorZ, colorA;
 	GLfloat fov = 45.0f, near = 0.1f, far = 100.0f;
-	unsigned int VAO, VBO;
+	unsigned int VAO, VBO, EBO;
 	// create matrices (matrix refrence no way???) for our projecion (in this case perspective) and view
 	glm::mat4 view = glm::mat4(1.0f);
-	//glm::mat4 projection;
-	Graphics_System(char* name, int width, int height){
+	
+	glm::mat4 projection;
+	Graphics_System(char* name, float width, float height){
 		this->name = name;
 		this->width = width;
 		this->height = height;
-		//this->projection = glm::perspective(glm::radians(fov), (GLfloat)height / width, near, far);
+		this->projection = glm::perspective(glm::radians(fov), 800.0f/600.0f, near, far);
+		view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f)); // DEBUG
 	}
 	/*
 		INITGL(VOID)
@@ -59,6 +61,8 @@ public:
 		}
 		// Init viewport
 		glViewport(0,0,this->width,this->height);
+		// enable depth buffering
+		glEnable(GL_DEPTH_TEST);
 	}
 	/*
 		Updates graphics, including:
@@ -74,20 +78,20 @@ public:
 		}else{
 			glClearColor(0.2f,0.3f,0.3f,1.0f);
 		}
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		for(int i = 0; i < gObs.size(); i++){
 			glBindTexture(GL_TEXTURE_2D, gObs[i]->Tex.textureID);
 			glUseProgram(gObs[i]->shaderProg);
 			// perspective / transformation stuff
-			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "transform"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
-			//glUnifromMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "model"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "view"), 1, GL_FALSE, glm::value_ptr(this->view));
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "projection"), 1, GL_FALSE, glm::value_ptr(this->projection));
 			// 
 			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawArrays(GL_TRIANGLES, 0 , 36);
 		}
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
-		
 	}
 	/*
 		Gets time from GLFW
@@ -113,14 +117,13 @@ public:
 			glGenBuffers(1, &VBO); // create gl buffer for the VBO
 			glBindBuffer(GL_ARRAY_BUFFER, VBO); // whenever we add to the array buffer
 			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i]->vert), gameObjs[i]->vert, GL_STATIC_DRAW); // copy VBO to array buffer
-			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-			glEnableVertexAttribArray(2); // 2
 			// init texture
 			loadGLTexture(&gameObjs[i]->Tex);
+			setInt("tex",gameObjs[i]->Tex.textureID, gameObjs[i]->s.ID);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -203,8 +206,17 @@ public:
 			//
 			
 		}else{
-			printf("Failed to generate texture.\n");
+			printf("Failed to generate texture, texture file does not exist!\n");
+			printf("Check integrity of game files.\n");
 		}
+	}
+	/*
+		===================
+		SHADER FUNCTIONS
+		===================
+	*/
+	void setInt(std::string name, int value, int id) {
+		glUniform1i(glGetUniformLocation(id, name.c_str()), value); 
 	}
 };
 #endif

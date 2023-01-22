@@ -10,6 +10,7 @@
 #include "../transform/transform.h"
 #include <vector>
 #include <iostream>
+// axis of rotations to make it easier to use
 enum rotationAxis{
 	AXIS_X = 0,
 	AXIS_Y = 1,
@@ -25,7 +26,8 @@ private:
 public:
 	Shader s;
 	unsigned int shaderProg;
-	float vert[50];
+	float vert[180];
+
 	texture Tex;
 	char* name;
 	// TRANSFORM SECTION
@@ -33,12 +35,13 @@ public:
 	GameObject(char* name,float vert[], char* vShaderName, char* fShaderName, char* texName){
 		this->name = name;
 		//memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
-		for(int i = 0; i < 50; i++){
+		for(int i = 0; i < 180; i++){
 			this->vert[i] = vert[i]; 
-			//if(i % 10 == 0)
-			//	printf("%f\n",vert[i]); 
-			//else
-			//	printf("%f | ",vert[i]); 
+
+			if(i % 5 == 0)
+				printf("%f\n",this->vert[i]); 
+			else
+				printf("%f | ",this->vert[i]); 
 		}
 		printf("\n");
 		Tex = texture(texName);
