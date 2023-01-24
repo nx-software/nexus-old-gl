@@ -21,4 +21,10 @@
 glm::mat4 tr_rotate(glm::mat4 original, float degrees, glm::vec3 axis){
 	return glm::rotate(original, glm::radians(degrees), axis);
 }
+glm::mat4 tr_translate(glm::mat4 original, glm::vec3 target){
+	return glm::translate(original, target);
+}
+glm::mat4 tr_scale(glm::mat4 original, float factor){
+	return glm::scale(original, glm::vec3((float)factor));
+}
 #endif

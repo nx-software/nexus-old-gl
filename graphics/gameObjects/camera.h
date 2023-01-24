@@ -4,8 +4,9 @@
 #include "../transform/glm/glm.hpp"
 #include "../transform/glm/ext/matrix_transform.hpp"
 #include "../transform/glm/gtc/type_ptr.hpp"
-class camera{
+class Camera{
 private:
+	
 public:
 	glm::vec3 transform = glm::vec3(0.0f,0.0f,3.0f);
 	// use this in cutscenes, perhaps point at a gameObject?
@@ -15,5 +16,23 @@ public:
 	glm::vec3 right = glm::normalize(glm::cross(up, dir));
 	// camera up axis
 	glm::vec3 camUp = glm::cross(dir, right);
+	//
+	float x,y,z;
+	// constructor
+	Camera(float x, float y, float z){
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		transform = glm::vec3(x,y,z);
+	}
+	void pointAtGameObject(GameObject gm){
+		//target = glm::vec3(gm.transform.x,gm.transform.y,gm.transform.z);
+	}
+	void updateTransform(float x, float y, float z){
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		transform = glm::vec3(x,y,z);
+	}
 };
 #endif

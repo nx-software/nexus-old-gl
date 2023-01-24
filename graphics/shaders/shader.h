@@ -1,7 +1,10 @@
 #ifndef SHADER_H
 #define SHADER_H
 #include "../glad/include/glad/glad.h"
-
+#include "../transform/glm/glm.hpp"
+#include "../transform/glm/ext/matrix_transform.hpp"
+#include "../transform/glm/gtc/type_ptr.hpp"
+#include "../transform/transform.h"
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -11,6 +14,7 @@ class Shader{
 public:
 	// program ID
 	unsigned int ID;
+	unsigned int shaderProg;
 	std::string vShaderSrc;
 	std::string fShaderSrc;
 	char* vertexFName;
@@ -39,7 +43,7 @@ public:
 			fShaderSrc = fragShaderData;
 			vShaderSrc[sizeOfVFile] = '\0';
 			fShaderSrc[sizeOfFFile] = '\0';
-			//printf("READ VERTEX FILE AS FOLLOWS: \n");
+			//==printf("READ VERTEX FILE AS FOLLOWS: \n");
 			//printf("%s\n",vShaderSrc);
 			//printf("===============================\n");
 		}else{
@@ -52,10 +56,25 @@ public:
 			}
 		}
 	}
-	// set values
-	void setBool(const std::string &name, bool val) const;
-	void setInt(const std::string &name, int val) const;
-	void setFloat(const std::string &name, float val) const;
-	
+	/*
+		===================
+		SHADER FUNCTIONS
+		===================
+	*/
+	void setInt(char* name, int value) const {
+		glUniform1i(glGetUniformLocation(ID, name), value); 
+	}
+	void setVec3(const std::string &name, const glm::vec3 &value) const
+    	{ 
+    		glUseProgram(shaderProg);
+    		printf("setVec3 (glmvec3 version) called with args = [%s, %f, %f, %f] in shader %d\n",name.c_str(), value.x,value.y,value.z,shaderProg);
+        	glUniform3fv(glGetUniformLocation(shaderProg, name.c_str()), 1, &value[0]); 
+    	}
+	void setVec3(const std::string &name, float x, float y, float z) const
+	{
+		glUseProgram(shaderProg);
+		printf("setVec3 called with args = [%s, %f, %f, %f] in shader %d\n",name.c_str(), x,y,z,shaderProg);
+		 glUniform3f(glGetUniformLocation(shaderProg, name.c_str()), x, y, z); 
+	}
 };
 #endif

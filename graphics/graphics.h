@@ -2,9 +2,11 @@
 #define GRAPHICS_H
 #include "glad/include/glad/glad.h"
 #include "gameObjects/gameObject.h"
+#include "gameObjects/light.h"
 #include "shaders/shader.h"
 #include "textures/texture.h"
 #include "../utils/utils.h"
+#include "gameObjects/camera.h"
 // transform
 #include "transform/glm/glm.hpp"
 #include "transform/glm/ext/matrix_transform.hpp"
@@ -22,19 +24,28 @@ private:
 	int width, height;
 	char* name;
 public:
+	// for input
+	enum keys{
+		KEY_W = 0,
+		KEY_S = 2,
+		KEY_A = 1, 
+		KEY_D = 3,
+		KEY_NONE = 99
+	};
 	float colorX, colorY, colorZ, colorA;
 	GLfloat fov = 45.0f, near = 0.1f, far = 100.0f;
-	unsigned int VAO, VBO, EBO;
+	unsigned int VAO, VBO;
 	// create matrices (matrix refrence no way???) for our projecion (in this case perspective) and view
 	glm::mat4 view = glm::mat4(1.0f);
-	
+	Camera* cam;
 	glm::mat4 projection;
-	Graphics_System(char* name, float width, float height){
+	Graphics_System(char* name, float width, float height, Camera* cam){
 		this->name = name;
 		this->width = width;
 		this->height = height;
 		this->projection = glm::perspective(glm::radians(fov), 800.0f/600.0f, near, far);
 		view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f)); // DEBUG
+		this->cam = cam;
 	}
 	/*
 		INITGL(VOID)
@@ -79,13 +90,14 @@ public:
 			glClearColor(0.2f,0.3f,0.3f,1.0f);
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		this->view = glm::lookAt(cam->transform, cam->target, cam->up);
 		for(int i = 0; i < gObs.size(); i++){
 			glBindTexture(GL_TEXTURE_2D, gObs[i]->Tex.textureID);
-			glUseProgram(gObs[i]->shaderProg);
+			glUseProgram(gObs[i]->s.shaderProg);
 			// perspective / transformation stuff
-			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "model"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
-			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "view"), 1, GL_FALSE, glm::value_ptr(this->view));
-			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->shaderProg, "projection"), 1, GL_FALSE, glm::value_ptr(this->projection));
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "model"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "view"), 1, GL_FALSE, glm::value_ptr(this->view));
+			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "projection"), 1, GL_FALSE, glm::value_ptr(this->projection));
 			// 
 			glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0 , 36);
@@ -107,6 +119,19 @@ public:
 		if(glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			exit(0);
 	}
+	int getInput(){
+		if(glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
+			return KEY_W;
+		else if(glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS)
+			return KEY_A;
+		else if(glfwGetKey(this->window, GLFW_KEY_S) == GLFW_PRESS)
+			return KEY_S;
+		else if(glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
+			return KEY_D;
+		else
+			return KEY_NONE;
+	}
+	
 	/*
 		Create a gameobject-
 	*/
@@ -117,13 +142,17 @@ public:
 			glGenBuffers(1, &VBO); // create gl buffer for the VBO
 			glBindBuffer(GL_ARRAY_BUFFER, VBO); // whenever we add to the array buffer
 			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i]->vert), gameObjs[i]->vert, GL_STATIC_DRAW); // copy VBO to array buffer
-			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+			// normal ?
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)(3 * sizeof(float)));
     			glEnableVertexAttribArray(1);
+    			// texture
+    			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*5*/12 * sizeof(float), (void*)(3 * sizeof(float)));
+    			glEnableVertexAttribArray(2);
 			// init texture
 			loadGLTexture(&gameObjs[i]->Tex);
-			setInt("tex",gameObjs[i]->Tex.textureID, gameObjs[i]->s.ID);
+			gameObjs[i]->s.setInt("tex",gameObjs[i]->Tex.textureID);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -163,26 +192,30 @@ public:
 		Compile shaders
 	*/
 	void compShadersAndCreateShaderProgram(Shader shader, GameObject* gameObject){
+		printf("Compile shaders...\n");
 		const char* vShade = shader.vShaderSrc.c_str();
 		const char* fShade = shader.fShaderSrc.c_str();
-		gameObject->shaderProg = glCreateProgram();
+		printf("Shaders read.\n");
+		//std::cout<<"OG V SHADER : \n" << shader->vShaderSrc<<"\n";
+		//printf("\nVS CONST CHAR: \n %s \n",vShade);
+		gameObject->s.shaderProg = glCreateProgram();
 		unsigned int cShader;
 		cShader = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(cShader, 1, &vShade, NULL);
 		glCompileShader(cShader); // compile the shader
 		checkShaderStatus(cShader,shader);
 		// attach shaders to program 
-		glAttachShader(gameObject->shaderProg, cShader);
+		glAttachShader(gameObject->s.shaderProg, cShader);
 		//
 		cShader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(cShader, 1, &fShade, NULL);
 		glCompileShader(cShader); // compile the shader
 		checkShaderStatus(cShader,shader);
 		// attach shaders to program 
-		glAttachShader(gameObject->shaderProg, cShader);
+		glAttachShader(gameObject->s.shaderProg, cShader);
 		//
-		glLinkProgram(gameObject->shaderProg);
-		checkLinkStatus(gameObject->shaderProg);
+		glLinkProgram(gameObject->s.shaderProg);
+		checkLinkStatus(gameObject->s.shaderProg);
 		glDeleteShader(cShader);
 	}
 	/*
@@ -210,13 +243,6 @@ public:
 			printf("Check integrity of game files.\n");
 		}
 	}
-	/*
-		===================
-		SHADER FUNCTIONS
-		===================
-	*/
-	void setInt(std::string name, int value, int id) {
-		glUniform1i(glGetUniformLocation(id, name.c_str()), value); 
-	}
+	
 };
 #endif
