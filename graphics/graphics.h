@@ -148,8 +148,8 @@ public:
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)(3 * sizeof(float)));
     			glEnableVertexAttribArray(1);
     			// texture
-    			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*5*/12 * sizeof(float), (void*)(3 * sizeof(float)));
-    			glEnableVertexAttribArray(2);
+    			//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)(6 * sizeof(float)));
+    			//glEnableVertexAttribArray(2);
 			// init texture
 			loadGLTexture(&gameObjs[i]->Tex);
 			gameObjs[i]->s.setInt("tex",gameObjs[i]->Tex.textureID);

@@ -67,13 +67,13 @@ public:
 	void setVec3(const std::string &name, const glm::vec3 &value) const
     	{ 
     		glUseProgram(shaderProg);
-    		printf("setVec3 (glmvec3 version) called with args = [%s, %f, %f, %f] in shader %d\n",name.c_str(), value.x,value.y,value.z,shaderProg);
+    		//printf("setVec3 (glmvec3 version) called with args = [%s, %f, %f, %f] in shader %d\n",name.c_str(), value.x,value.y,value.z,shaderProg);
         	glUniform3fv(glGetUniformLocation(shaderProg, name.c_str()), 1, &value[0]); 
     	}
 	void setVec3(const std::string &name, float x, float y, float z) const
 	{
 		glUseProgram(shaderProg);
-		printf("setVec3 called with args = [%s, %f, %f, %f] in shader %d\n",name.c_str(), x,y,z,shaderProg);
+		//printf("setVec3 called with args = [%s, %f, %f, %f] in shader %d\n",name.c_str(), x,y,z,shaderProg);
 		 glUniform3f(glGetUniformLocation(shaderProg, name.c_str()), x, y, z); 
 	}
 };
