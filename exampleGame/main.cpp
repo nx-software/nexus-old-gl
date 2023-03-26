@@ -64,7 +64,7 @@ int main(){
 	lightType.push_back(3);
 	GameObject triangle = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
 	Box_collider tr_Col = Box_collider(&triangle);
-	GameObject lightM = GameObject("light1", vert, "exampleGame/shaders.vShader.vf","exampleGame/shaders/lfshader.ff", "exampleGame/textures/win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
+	GameObject lightM = GameObject("light1", vert, "exampleGame/shaders/vShader.vf","exampleGame/shaders/lfshader.ff", "exampleGame/textures/win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
 	Box_collider tr_ight = Box_collider(&lightM);
 	
 	printf("Objects created.\n");
