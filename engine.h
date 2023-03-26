@@ -10,6 +10,7 @@
 #include "graphics/transform/glm/ext/matrix_transform.hpp"
 #include "graphics/transform/glm/gtc/type_ptr.hpp"
 #include <list>
+#include <GLFW/glfw3.h>
 class Nexus{
 private:
 	Camera cam = Camera(0,0,0);
@@ -69,5 +70,9 @@ public:
 	enum keys getInput(){
 		return gr.getInput();
 	}
+	GLFWwindow* getWindow(){
+		return gr.GetWindow();
+	}
+	
 };
 #endif

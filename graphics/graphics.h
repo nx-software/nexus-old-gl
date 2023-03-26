@@ -7,6 +7,8 @@
 #include "textures/texture.h"
 #include "../utils/utils.h"
 #include "gameObjects/camera.h"
+#include "gui/imgui.h"
+#include "gui/imgui_impl_glfw.h" 
 // transform
 #include "transform/glm/glm.hpp"
 #include "transform/glm/ext/matrix_transform.hpp"
@@ -94,7 +96,7 @@ public:
 		for(int i = 0; i < gObs.size(); i++){
 			glBindTexture(GL_TEXTURE_2D, gObs[i]->Tex.textureID);
 			glUseProgram(gObs[i]->s.shaderProg);
-			// perspective / transformation stuff
+			// perspective / transformation stuff  (defined in the shaders)
 			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "model"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
 			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "view"), 1, GL_FALSE, glm::value_ptr(this->view));
 			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "projection"), 1, GL_FALSE, glm::value_ptr(this->projection));
@@ -137,19 +139,26 @@ public:
 	*/
 	void initGameObj(std::vector<GameObject*> gameObjs){
 		for(int i = 0; i < gameObjs.size(); i++){
+			printf("Proccessing %s right now, who has a size of %d\n",gameObjs[i]->name, gameObjs[i]->s.finalTypes.size());
 			glGenVertexArrays(1, &VAO);
 			glBindVertexArray(VAO);
 			glGenBuffers(1, &VBO); // create gl buffer for the VBO
 			glBindBuffer(GL_ARRAY_BUFFER, VBO); // whenever we add to the array buffer
 			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i]->vert), gameObjs[i]->vert, GL_STATIC_DRAW); // copy VBO to array buffer
-			glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-			// normal ?
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)(3 * sizeof(float)));
-    			glEnableVertexAttribArray(1);
-    			// texture
-    			//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*5*/6 * sizeof(float), (void*)(6 * sizeof(float)));
-    			//glEnableVertexAttribArray(2);
+			for(int g = 0; g < gameObjs[i]->s.locations ; g++){
+				printf("currently at %d\n",g);
+				//glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)0);
+				//glEnableVertexAttribArray(0);
+				// normal ?
+				//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)(3 * sizeof(float)));
+	    			//glEnableVertexAttribArray(1);
+	    			// texture
+	    			printf("Doin: %d, %d, %d\n",g,  gameObjs[i]->s.finalTypes[g], g * 3);
+	    			glVertexAttribPointer(g, gameObjs[i]->s.finalTypes[g], GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)(g*3 * sizeof(float)));
+	    			glEnableVertexAttribArray(g);
+    			}
+    			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)(6 * sizeof(float)));
+	    		glEnableVertexAttribArray(2);
 			// init texture
 			loadGLTexture(&gameObjs[i]->Tex);
 			gameObjs[i]->s.setInt("tex",gameObjs[i]->Tex.textureID);
@@ -173,7 +182,7 @@ public:
 			std::cout << "Frag Shader data\n";
 			printf("%s\n",s.fShaderSrc.c_str());
 			printf("===================================\n");
-			exit(1);	
+			exit(1); // fatal error, exit. This is so sad.	
 		}
 	}
 	/*
@@ -186,6 +195,7 @@ public:
 		if(!success){
 			glGetProgramInfoLog(shaderProg, 512, NULL, infoLog); // get error
 			std::cout << "Error link shader prog: " << infoLog << "\n";
+			exit(1); // FATAL ERROR! 
 		}
 	}
 	/*
@@ -243,6 +253,15 @@ public:
 			printf("Check integrity of game files.\n");
 		}
 	}
-	
+	/*
+		UI Stuff - for menus 
+	*/
+	void initIMGUI(){
+		ImGui::CreateContext();
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
+	}
+	GLFWwindow* GetWindow(){
+		return window;
+	}
 };
 #endif

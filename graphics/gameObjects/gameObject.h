@@ -35,7 +35,7 @@ public:
 	glm::mat4 transform = glm::mat4(1.0f);
 	glm::vec3 lastPos = glm::vec3(0.0f,0.0f,0.0f);
 	Light l;
-	GameObject(char* name,float vert[], char* vShaderName, char* fShaderName, char* texName, Light light = Light(glm::vec3(-99.0f,-99.0f,-99.0f))){
+	GameObject(char* name,float vert[], char* vShaderName, char* fShaderName, char* texName,std::vector<int> finalTypes, Light light = Light(glm::vec3(-99.0f,-99.0f,-99.0f))){
 		printf("Model %s using files %s and %s\n",name,vShaderName, fShaderName);
 		this->name = name;
 		//memcpy(vert, this->vert, sizeof(vert)+sizeOfArray(vert));
@@ -49,7 +49,7 @@ public:
 		}
 		printf("\n");
 		Tex = texture(texName);
-		s = Shader(vShaderName, fShaderName);
+		s = Shader(vShaderName, fShaderName, finalTypes);
 		if(light.color != glm::vec3(-99.0f,-99.0f,-99.0f))
 			l = light;
 		//printf("[gameObject] Gameobject read frag shader (from src %s) as follows: \n%s\n",fShaderName,this->s.fShaderSrc);

@@ -9,7 +9,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-
+#include <regex>
+#include <vector>
 class Shader{
 public:
 	// program ID
@@ -19,8 +20,11 @@ public:
 	std::string fShaderSrc;
 	char* vertexFName;
 	char* fragFName;
+	int locations = 0;
+	std::vector<int> finalTypes;
 	Shader(){}
-	Shader(char* vertexSP, char* fragSP){
+	Shader(char* vertexSP, char* fragSP, std::vector<int> finalTypes){
+		this->finalTypes = finalTypes;
 		this->vertexFName = vertexSP;
 		this->fragFName = fragSP;
 		// read from file
@@ -41,6 +45,21 @@ public:
 			fread(fragShaderData, sizeof(fragShaderData), 1, fragFile);
 			vShaderSrc = vertexShaderData;
 			fShaderSrc = fragShaderData;
+			// get location
+			std::string locVS = vShaderSrc;
+			char* loc = "layout";
+			size_t found = locVS.find("layout");
+			while(found != std::string::npos){
+				found = locVS.find("layout");
+				if(found != std::string::npos){
+				locVS.replace(found, strlen(loc), ""); 
+				//printf("LOC = %d and we have :\n",locations);
+				//std::cout << locVS << "\n";
+				locations++;
+				}
+			}
+			printf("VS = %d \n",locations);
+			//
 			vShaderSrc[sizeOfVFile] = '\0';
 			fShaderSrc[sizeOfFFile] = '\0';
 			//==printf("READ VERTEX FILE AS FOLLOWS: \n");
