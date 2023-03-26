@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: setup
-      run: chmod ./setup.sh +x; ./setup.sh
+      run: chmod +x ./setup.sh; ./setup.sh
     - name: make
       run: make
     - name: release
