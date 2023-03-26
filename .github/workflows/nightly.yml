@@ -23,6 +23,7 @@ jobs:
         draft: false
         prerelease: false
         tag_name: nightly
+        version: ${{ github.ref }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
     - name: upload linux artifact
