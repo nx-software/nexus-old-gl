@@ -13,19 +13,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: setup
-      run: ./setup.sh
+      run: chmod ./setup.sh +x; ./setup.sh
     - name: make
       run: make
-    - name: version
-      run: echo "::set-output name=version::$(./bin/azblogfilter --version)"
-      id: version
     - name: release
       uses: actions/create-release@v1
       id: create_release
       with:
         draft: false
         prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
         tag_name: nightly
       env:
         GITHUB_TOKEN: ${{ github.token }}
