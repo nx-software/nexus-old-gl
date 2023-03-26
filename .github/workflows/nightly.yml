@@ -1,0 +1,35 @@
+name: Nightly
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup
+      run: chmod +x ./setup.sh; ./setup.sh
+    - name: make
+      run: make
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        tag_name: nightly
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: upload linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./nexus
+        asset_name: nexus
