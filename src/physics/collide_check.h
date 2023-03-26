@@ -8,6 +8,7 @@ bool collide(Box_collider a, Box_collider b){
 	float a_centerX = a_transform[0].x;
 	float a_centerY = a_transform[1].y;
 	float a_centerZ = a_transform[2].z;
+	float a_size = a_transform[0].x;
 	
 	float b_centerX = b_transform[0].z;	
 	float b_centerY = b_transform[1].y;

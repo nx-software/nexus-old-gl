@@ -7,8 +7,8 @@
 #include "textures/texture.h"
 #include "../utils/utils.h"
 #include "gameObjects/camera.h"
-#include "gui/imgui.h"
-#include "gui/imgui_impl_glfw.h" 
+//#include "gui/imgui.h"
+//#include "gui/imgui_impl_glfw.h" 
 // transform
 #include "transform/glm/glm.hpp"
 #include "transform/glm/ext/matrix_transform.hpp"
@@ -256,10 +256,10 @@ public:
 	/*
 		UI Stuff - for menus 
 	*/
-	void initIMGUI(){
+	/*void initIMGUI(){
 		ImGui::CreateContext();
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
-	}
+	}*/
 	GLFWwindow* GetWindow(){
 		return window;
 	}
