@@ -1,7 +1,9 @@
-#include "../engine.h"
-#include "../graphics/objread.h"
+#include "../src/engine.h"
+#include "../src/physics/collider.h"
+#include "../src/physics/collide_check.h"
+#include "../src/graphics/objread.h"
 // for menu
-#include "../graphics/gui/imgui.h"
+//#include "../graphics/gui/imgui.h"
 //#include "../graphics/gui/imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 #include <vector>
@@ -60,8 +62,11 @@ int main(){
 	triType.push_back(2);
 	lightType.push_back(3);
 	lightType.push_back(3);
-	GameObject triangle = GameObject("model1",vert, "exampleGame/vs","exampleGame/fs","wall.jpg", triType);
-	GameObject lightM = GameObject("light1", vert, "exampleGame/vShader.vf","exampleGame/lfshader.ff", "win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
+	GameObject triangle = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
+	Box_collider tr_Col = Box_collider(&triangle);
+	GameObject lightM = GameObject("light1", vert, "exampleGame/shaders.vShader.vf","exampleGame/shaders/lfshader.ff", "exampleGame/textures/win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
+	Box_collider tr_ight = Box_collider(&lightM);
+	
 	printf("Objects created.\n");
 	//GameObject tri2 = GameObject("model2",vert, "vShader.vf","fShader.ff","win.jpg");
 	nx.addObject(&triangle);
@@ -74,27 +79,14 @@ int main(){
 	lightM.scale(0.5f);
 	triangle.scale(10.0f);
 	triangle.translate(glm::vec3(0.0f,-0.5f,0.0f));
+	tr_Col.update();
+	collide(tr_Col,tr_ight);
 	//triangle.rotate(45.0f,AXIS_Y);
 	nx.updateBackground(0.3,0.4,0.7,1);
 	printf("Main loop started\n");
 	//nx.setCurrentProgram(triangle);
-	//ImGui::CreateContext();
-	//ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//ImGui_ImplGlfw_InitForOpenGL(nx.getWindow(), true);
-	//ImGui_ImplOpenGL3_Init("#version 130");
 	while(1){
-		//ImGui_ImplOpenGL3_NewFrame();
-		//ImGui_ImplGlfw_NewFrame();
-		//ImGui::NewFrame();
-		//ImGui::Begin("Nexus Engine demo");
-		//ImGui::Text("This is a demo of the Nexus engine.");  
-		//tri2.rotate(cos(nx.getTime()),AXIS_X);
-		//tri2.rotate(tan(nx.getTime()),AXIS_Z);
-		//tri2.rotate(cos(nx.getTime()),AXIS_Y);
-		//ImGui::End();
-		//ImGui::Render();
 		nx.updateGraphics();
-		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		lightM.rotate(sin(nx.getTime()),AXIS_X);
 		lightM.rotate(cos(nx.getTime()),AXIS_Z);
 		lightM.rotate(sin(nx.getTime()),AXIS_Y);

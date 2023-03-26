@@ -7,10 +7,7 @@ private:
 public:
 	glm::mat4 transform;
 	GameObject* gm;
-	box_collider(glm::mat4 transform){
-		this->transform = transform;
-	}
-	box_collider(GameObject* gm){
+	Box_collider(GameObject* gm){
 		this->gm = gm;		
 	}
 	void update(){

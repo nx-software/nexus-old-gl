@@ -13,9 +13,11 @@ bool collide(Box_collider a, Box_collider b){
 	float b_centerY = b_transform[1].y;
 	float b_centerZ = b_transform[2].z;
 	
-	glm::vec3 centerToCenter= glm::vec3(a_centerX - b_centerX, a_centerY - b_centerY, a_centerZ - b_centerZ);
+	printf("%f,%f,%f\n%f,%f,%f\n",a_centerX,a_centerY,a_centerZ,b_centerX,b_centerY,b_centerZ);
 	
-	//float projectionOf
+	glm::vec3 centerToCenter = glm::vec3(a_centerX - b_centerX, a_centerY - b_centerY, a_centerZ - b_centerZ);
+	
+	float projectionOfCenter = glm::dot(centerToCenter, glm::vec3(1,-1,1));
 	return false;
 }
 
