@@ -63,7 +63,9 @@ int main(){
 	lightType.push_back(3);
 	lightType.push_back(3);
 	GameObject triangle = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
+  GameObject tr_2 = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
 	Box_collider tr_Col = Box_collider(&triangle);
+  Box_collider tr_ck = Box_collider(&tr_2);
 	GameObject lightM = GameObject("light1", vert, "exampleGame/shaders/vShader.vf","exampleGame/shaders/lfshader.ff", "exampleGame/textures/win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
 	Box_collider tr_ight = Box_collider(&lightM);
 	
@@ -71,16 +73,19 @@ int main(){
 	//GameObject tri2 = GameObject("model2",vert, "vShader.vf","fShader.ff","win.jpg");
 	nx.addObject(&triangle);
 	nx.addObject(&lightM);
+  nx.addObject(&tr_2);
 	printf("Shaders added.\n");
 	//nx.addObject(&tri2);
 	nx.compileShaders();
 	printf("Shaders compiled.\n");
 	lightM.translate(glm::vec3(1.2f, 1.0f, 2.0f));
 	lightM.scale(0.5f);
-	triangle.scale(10.0f);
+	triangle.scale(2.0f);
 	triangle.translate(glm::vec3(0.0f,-0.5f,0.0f));
+  tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
 	tr_Col.update();
-	collide(tr_Col,tr_ight);
+  tr_ck.update();
+	printf("COLL = %d\n",collide(tr_Col,tr_ck));
 	//triangle.rotate(45.0f,AXIS_Y);
 	nx.updateBackground(0.3,0.4,0.7,1);
 	printf("Main loop started\n");

@@ -1,0 +1,5 @@
+run = "./nexus"
+compile = "make"
+
+[nix]
+channel = "stable-22_11"

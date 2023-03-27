@@ -76,6 +76,7 @@ public:
 		glViewport(0,0,this->width,this->height);
 		// enable depth buffering
 		glEnable(GL_DEPTH_TEST);
+    return 0;
 	}
 	/*
 		Updates graphics, including:
