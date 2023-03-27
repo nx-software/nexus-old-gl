@@ -12,7 +12,7 @@ public:
 	}
 	void update(){
 		if(gm){
-			this->transform = gm->transform;
+			this->transform = gm->transform; 
 		}	
 	}
 };
