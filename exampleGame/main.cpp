@@ -73,7 +73,7 @@ int main(){
 	//GameObject tri2 = GameObject("model2",vert, "vShader.vf","fShader.ff","win.jpg");
 	nx.addObject(&triangle);
 	nx.addObject(&lightM);
-  nx.addObject(&tr_2);
+	nx.addObject(&tr_2);
 	printf("Shaders added.\n");
 	//nx.addObject(&tri2);
 	nx.compileShaders();
@@ -82,9 +82,9 @@ int main(){
 	lightM.scale(0.5f);
 	triangle.scale(2.0f);
 	triangle.translate(glm::vec3(0.0f,-0.5f,0.0f));
-  tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
+  	tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
 	tr_Col.update();
-  tr_ck.update();
+  	tr_ck.update();
 	printf("COLL = %d\n",collide(tr_Col,tr_ck));
 	//triangle.rotate(45.0f,AXIS_Y);
 	nx.updateBackground(0.3,0.4,0.7,1);
@@ -105,13 +105,20 @@ int main(){
 		//cam.updateTransform(sin(nx.getTime()) * 10.0f,0.0f,cos(nx.getTime()) * 10.0f);
 		switch(nx.getInput()){
 			case nx.KEY_W:
-			cam.updateTransform(cam.x + 0.5f, cam.y, cam.z);
+			//cam.updateTransform(cam.x + 0.5f, cam.y, cam.z);
+			tr_2.translate(glm::vec3(0.0f,-0.1f,0.0f));
+			tr_ck.update();
+			
+			printf("COLL = %d\n",collide(tr_Col,tr_ck));
 			break;
 			case nx.KEY_A:
 			cam.updateTransform(cam.x, cam.y - 0.5f, cam.z);
 			break;
 			case nx.KEY_S:
-			cam.updateTransform(cam.x, cam.y + 0.5f, cam.z);
+			//cam.updateTransform(cam.x, cam.y + 0.5f, cam.z);
+			tr_2.translate(glm::vec3(0.0f,0.1f,0.0f));
+			tr_ck.update();
+			printf("COLL = %d\n",collide(tr_Col,tr_ck));
 			break;
 			case nx.KEY_D:
 			cam.updateTransform(cam.x - 0.5f, cam.y, cam.z);

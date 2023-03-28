@@ -27,8 +27,9 @@ bool collide(Box_collider a, Box_collider b){
 	float b_centerX = b_translation[0];	
 	float b_centerY = b_translation[1];
 	float b_centerZ = b_translation[2];	
+	printf("DEBUG FOR COLLISION:\n");
 	printf("%f,%f,%f\n%f,%f,%f\n",a_centerX,a_centerY,a_centerZ,b_centerX,b_centerY,b_centerZ);
-
+	printf("SCALE FOR OBJECTS\n%f %f %f\n%f %f %f\n",a_scale.x, a_scale.y, a_scale.z, b_scale.x, b_scale.y, b_scale.z);
 
   
 	//glm::vec3 centerToCenter = glm::vec3(a_centerX - b_centerX, a_centerY - b_centerY, a_centerZ - b_centerZ);
@@ -40,13 +41,15 @@ bool collide(Box_collider a, Box_collider b){
   //printf("PRC = %d\n",projectionOfCenter);
   
 	//return false;
+	float a_s = a_scale.x / 2.0f;
+	float b_s = b_scale.x / 2.0f;
 	return (
-	a_centerX - a_scale[0] <= b_centerX + b_scale[0] &&
-	a_centerX + a_scale[0] >= b_centerX - b_scale[0] &&
-	a_centerY - a_scale[0] <= b_centerY + b_scale[0] &&
-	a_centerY + a_scale[0] >= b_centerY - b_scale[0] &&
-	a_centerZ - a_scale[0] <= b_centerZ + b_scale[0] &&
-	a_centerZ + a_scale[0] >= b_centerZ - b_scale[0]
+		a_centerX - a_s  <= b_centerX + b_s &&
+		a_centerX + a_s >= b_centerX - b_s &&
+		a_centerY - a_s <= b_centerY + b_s &&
+		a_centerY + a_s  >= b_centerY - b_s &&
+		a_centerZ - a_s <= b_centerZ + b_s &&
+		a_centerZ + a_s  >= b_centerZ - b_s
 	);
 }
 

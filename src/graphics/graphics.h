@@ -76,7 +76,7 @@ public:
 		glViewport(0,0,this->width,this->height);
 		// enable depth buffering
 		glEnable(GL_DEPTH_TEST);
-    return 0;
+    		return 0;
 	}
 	/*
 		Updates graphics, including:
@@ -196,7 +196,7 @@ public:
 		if(!success){
 			glGetProgramInfoLog(shaderProg, 512, NULL, infoLog); // get error
 			std::cout << "Error link shader prog: " << infoLog << "\n";
-			exit(1); // FATAL ERROR! 
+			exit(1); // FATAL ERROR! (sad)
 		}
 	}
 	/*
