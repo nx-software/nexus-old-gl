@@ -2,6 +2,7 @@
 #include "../src/physics/collider.h"
 #include "../src/physics/collide_check.h"
 #include "../src/graphics/objread.h"
+#include "../src/physics/physicsManager.h"
 // for menu
 //#include "../graphics/gui/imgui.h"
 //#include "../graphics/gui/imgui_impl_opengl3.h"
@@ -11,6 +12,7 @@ int main(){
 	// create main camera
 	Camera cam = Camera(0.0f,0.0f,3.0f);
 	Nexus nx = Nexus("Electro Corp - Nexus 3d Engine Example Game",800.0f,600.0f, &cam);	
+  PhysicsManager pm = PhysicsManager();
 	float vert[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
@@ -66,6 +68,10 @@ int main(){
   GameObject tr_2 = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
 	Box_collider tr_Col = Box_collider(&triangle);
   Box_collider tr_ck = Box_collider(&tr_2);
+  RigidBody trRb = RigidBody(&tr_Col);
+  RigidBody tr_Rb2 = RigidBody(&tr_ck);
+  pm.addRigidBody(&trRb);
+  pm.addRigidBody(&tr_Rb2);
 	GameObject lightM = GameObject("light1", vert, "exampleGame/shaders/vShader.vf","exampleGame/shaders/lfshader.ff", "exampleGame/textures/win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
 	Box_collider tr_ight = Box_collider(&lightM);
 	
@@ -82,9 +88,9 @@ int main(){
 	lightM.scale(0.5f);
 	triangle.scale(2.0f);
 	triangle.translate(glm::vec3(0.0f,-0.5f,0.0f));
-  	tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
+  tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
 	tr_Col.update();
-  	tr_ck.update();
+  tr_ck.update();
 	printf("COLL = %d\n",collide(tr_Col,tr_ck));
 	//triangle.rotate(45.0f,AXIS_Y);
 	nx.updateBackground(0.3,0.4,0.7,1);
@@ -108,8 +114,8 @@ int main(){
 			//cam.updateTransform(cam.x + 0.5f, cam.y, cam.z);
 			tr_2.translate(glm::vec3(0.0f,-0.1f,0.0f));
 			tr_ck.update();
-			
-			printf("COLL = %d\n",collide(tr_Col,tr_ck));
+			pm.physicsUpdate();
+			//printf("COLL = %d\n",collide(tr_Col,tr_ck));
 			break;
 			case nx.KEY_A:
 			cam.updateTransform(cam.x, cam.y - 0.5f, cam.z);
@@ -118,7 +124,8 @@ int main(){
 			//cam.updateTransform(cam.x, cam.y + 0.5f, cam.z);
 			tr_2.translate(glm::vec3(0.0f,0.1f,0.0f));
 			tr_ck.update();
-			printf("COLL = %d\n",collide(tr_Col,tr_ck));
+        pm.physicsUpdate();
+			//printf("COLL = %d\n",collide(tr_Col,tr_ck));
 			break;
 			case nx.KEY_D:
 			cam.updateTransform(cam.x - 0.5f, cam.y, cam.z);
@@ -128,6 +135,7 @@ int main(){
 			break;
 			default:
 			cam.updateTransform(cam.x, cam.y, cam.z);
+      
 			break;
 		};
 		

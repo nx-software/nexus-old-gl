@@ -27,9 +27,9 @@ bool collide(Box_collider a, Box_collider b){
 	float b_centerX = b_translation[0];	
 	float b_centerY = b_translation[1];
 	float b_centerZ = b_translation[2];	
-	printf("DEBUG FOR COLLISION:\n");
+	/*printf("DEBUG FOR COLLISION:\n");
 	printf("%f,%f,%f\n%f,%f,%f\n",a_centerX,a_centerY,a_centerZ,b_centerX,b_centerY,b_centerZ);
-	printf("SCALE FOR OBJECTS\n%f %f %f\n%f %f %f\n",a_scale.x, a_scale.y, a_scale.z, b_scale.x, b_scale.y, b_scale.z);
+	printf("SCALE FOR OBJECTS\n%f %f %f\n%f %f %f\n",a_scale.x, a_scale.y, a_scale.z, b_scale.x, b_scale.y, b_scale.z);*/
 
   
 	//glm::vec3 centerToCenter = glm::vec3(a_centerX - b_centerX, a_centerY - b_centerY, a_centerZ - b_centerZ);
