@@ -1,6 +1,6 @@
 #ifndef COLLIDE_CHECK_H
 #define COLLIDE_CHECK_H
-#include "collider.h"
+#include "box_collider.h"
 #include "../graphics/transform/glm/gtx/matrix_decompose.hpp"
 bool collide(Box_collider a, Box_collider b){
 	glm::mat4 a_transform = a.transform;

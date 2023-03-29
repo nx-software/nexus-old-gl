@@ -2,18 +2,12 @@
 #define COLLIDER_H
 #include "../graphics/transform/glm/glm.hpp"
 #include "../graphics/gameObjects/gameObject.h"
-class Box_collider{
+class Collider{
 private:
 public:
-	glm::mat4 transform;
 	GameObject* gm;
-	Box_collider(GameObject* gm){
+	Collider(GameObject* gm){
 		this->gm = gm;		
-	}
-	void update(){
-		if(gm){
-			this->transform = gm->transform; 
-		}	
 	}
 };
 #endif

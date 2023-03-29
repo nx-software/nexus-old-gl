@@ -1,4 +1,5 @@
 #include "../src/engine.h"
+#include "../src/physics/box_collider.h"
 #include "../src/physics/collider.h"
 #include "../src/physics/collide_check.h"
 #include "../src/graphics/objread.h"
@@ -65,16 +66,16 @@ int main(){
 	lightType.push_back(3);
 	lightType.push_back(3);
 	GameObject triangle = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
-  GameObject tr_2 = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
+	GameObject tr_2 = GameObject("model1",vert, "exampleGame/shaders/vs","exampleGame/shaders/fs","exampleGame/textures/wall.jpg", triType);
 	Box_collider tr_Col = Box_collider(&triangle);
-  Box_collider tr_ck = Box_collider(&tr_2);
-  RigidBody trRb = RigidBody(&tr_Col);
-  RigidBody tr_Rb2 = RigidBody(&tr_ck);
-  pm.addRigidBody(&trRb);
-  pm.addRigidBody(&tr_Rb2);
+	Box_collider tr_ck = Box_collider(&tr_2);
+	RigidBody trRb = RigidBody(&tr_Col);
+	RigidBody tr_Rb2 = RigidBody(&tr_ck);
+	pm.addRigidBody(&trRb);
+	pm.addRigidBody(&tr_Rb2);
 	GameObject lightM = GameObject("light1", vert, "exampleGame/shaders/vShader.vf","exampleGame/shaders/lfshader.ff", "exampleGame/textures/win.jpg",lightType, glm::vec3(1.0f,1.0f,1.0f));
 	Box_collider tr_ight = Box_collider(&lightM);
-	
+
 	printf("Objects created.\n");
 	//GameObject tri2 = GameObject("model2",vert, "vShader.vf","fShader.ff","win.jpg");
 	nx.addObject(&triangle);
@@ -88,9 +89,9 @@ int main(){
 	lightM.scale(0.5f);
 	triangle.scale(2.0f);
 	triangle.translate(glm::vec3(0.0f,-0.5f,0.0f));
-  tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
+	tr_2.translate(glm::vec3(0.0f,5.0f,0.0f));
 	tr_Col.update();
-  tr_ck.update();
+	tr_ck.update();
 	printf("COLL = %d\n",collide(tr_Col,tr_ck));
 	//triangle.rotate(45.0f,AXIS_Y);
 	nx.updateBackground(0.3,0.4,0.7,1);
