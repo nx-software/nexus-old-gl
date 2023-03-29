@@ -110,12 +110,17 @@ int main(){
 		triangle.s.setVec3("viewPos", cam.transform);
 		cam.pointAtGameObject(triangle);
 		//cam.updateTransform(sin(nx.getTime()) * 10.0f,0.0f,cos(nx.getTime()) * 10.0f);
+    
+    
+    
+    
+    pm.physicsUpdate();
 		switch(nx.getInput()){
 			case nx.KEY_W:
 			//cam.updateTransform(cam.x + 0.5f, cam.y, cam.z);
 			tr_2.translate(glm::vec3(0.0f,-0.1f,0.0f));
 			tr_ck.update();
-			pm.physicsUpdate();
+			
 			//printf("COLL = %d\n",collide(tr_Col,tr_ck));
 			break;
 			case nx.KEY_A:
@@ -125,7 +130,7 @@ int main(){
 			//cam.updateTransform(cam.x, cam.y + 0.5f, cam.z);
 			tr_2.translate(glm::vec3(0.0f,0.1f,0.0f));
 			tr_ck.update();
-        pm.physicsUpdate();
+       // pm.physicsUpdate();
 			//printf("COLL = %d\n",collide(tr_Col,tr_ck));
 			break;
 			case nx.KEY_D:

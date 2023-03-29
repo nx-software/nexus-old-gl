@@ -18,6 +18,8 @@ public:
           }
         }
       } 
+      //Box_collider* g;
+      (*(rbs[i])).rigidBodyCalculate();
     }
   }
   void addRigidBody(RigidBody* rb){
