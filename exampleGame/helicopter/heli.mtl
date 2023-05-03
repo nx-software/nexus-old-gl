@@ -1,0 +1,160 @@
+# Blender MTL File: 'Heli_New_pieces.blend'
+# Material Count: 14
+
+newmtl Cornerwedge1Mtl
+Ns 0.000000
+Ka 0.786364 0.786364 0.786364
+Kd 0.373615 0.368591 0.383775
+Ks 0.033853 0.033853 0.033853
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.850980
+illum 6
+
+newmtl Part11Mtl
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.124741 0.113921 0.121986
+Ks 0.010843 0.010843 0.010843
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Part1Mtl
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_normal-ogl.png
+map_Ns /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_roughness.png
+refl /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_metallic.png
+
+newmtl Part1Mtl.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_normal-ogl.png
+map_Ns /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_roughness.png
+refl /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_metallic.png
+
+newmtl Part1Mtl.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_normal-ogl.png
+map_Ns /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_roughness.png
+refl /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_albedo.png
+
+newmtl Part1Mtl.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Part1Mtl.004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_normal-ogl.png
+map_Ns /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_roughness.png
+refl /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_albedo.png
+
+newmtl Part1Mtl.005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 0.000000
+Ks 0.060131 0.060131 0.060131
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_normal-ogl.png
+map_Ns /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_roughness.png
+refl /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/reinforced-metal-bl/reinforced-metal_albedo.png
+
+newmtl Part3Mtl
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.103634 0.108711 0.141980
+Ks 0.010653 0.010653 0.010653
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Part3Mtl.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Part4Mtl
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.103634 0.108711 0.141980
+Ks 0.010653 0.010653 0.010653
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Part4Mtl.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 0.000000 0.000000
+Ks 0.030065 0.030065 0.030065
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Wedge1Mtl.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.016068 0.058187 0.022013
+Ks 0.002894 0.002894 0.002894
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_normal-ogl.png
+map_Ns /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_roughness.png
+refl /home/segfault/Eclypse/Assets/Map/Tech_demo/heli/used-stainless-steel2-bl/used-stainless-steel2_metallic.png
+
+newmtl Wedge2Mtl
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.002586 0.002586 0.002586
+Ks 0.000233 0.000233 0.000233
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2

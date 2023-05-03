@@ -21,10 +21,8 @@ public:
 	char* vertexFName;
 	char* fragFName;
 	int locations = 0;
-	std::vector<int> finalTypes;
 	Shader(){}
-	Shader(char* vertexSP, char* fragSP, std::vector<int> finalTypes){
-		this->finalTypes = finalTypes;
+	Shader(char* vertexSP, char* fragSP){
 		this->vertexFName = vertexSP;
 		this->fragFName = fragSP;
 		// read from file

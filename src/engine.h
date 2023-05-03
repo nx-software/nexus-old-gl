@@ -4,7 +4,7 @@
 #include "graphics/gameObjects/gameObject.h"
 #include "graphics/gameObjects/light.h"
 #include "graphics/shaders/shader.h"
-#include "graphics/textures/texture.h"
+//#include "graphics/textures/texture.h"
 #include "graphics/gameObjects/camera.h"
 #include "graphics/transform/glm/glm.hpp"
 #include "graphics/transform/glm/ext/matrix_transform.hpp"
@@ -21,8 +21,10 @@ public:
 		KEY_S = 2,
 		KEY_A = 1, 
 		KEY_D = 3,
+		KEY_ENTER = 4,
 		KEY_NONE = 99	
 	};
+	
 	std::vector<GameObject*> gameObjs;
 	std::vector<Light> lights;
 	Nexus(char* name, float width, float height, Camera* cam){
@@ -39,6 +41,9 @@ public:
 	}
 	void updateGraphics(){
 		gr.nextTick(gameObjs);
+	}
+	void grabCursor(){
+		gr.grabCursor();
 	}
 	void updateBackground(float x, float y, float z, float a){
 		this->gr.colorX = x;
@@ -69,6 +74,9 @@ public:
 	}
 	enum keys getInput(){
 		return gr.getInput();
+	}
+	mouseCoords getMouse(){
+		return mousec;
 	}
 	GLFWwindow* getWindow(){
 		return gr.GetWindow();

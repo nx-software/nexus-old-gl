@@ -4,7 +4,6 @@
 #include "gameObjects/gameObject.h"
 #include "gameObjects/light.h"
 #include "shaders/shader.h"
-#include "textures/texture.h"
 #include "../utils/utils.h"
 #include "gameObjects/camera.h"
 //#include "gui/imgui.h"
@@ -20,11 +19,20 @@
 #include <list>
 #include <iterator>
 #include <vector>
+typedef struct mouseCoords{
+	float x,y;
+};
+mouseCoords mousec = {-10.0f,0.0f};
+static void mouse_callback(GLFWwindow* win, double x, double y){
+		 printf("callbacl\n");
+		 mousec = {(float)x,(float)y};
+}
 class Graphics_System{
 private:
 	GLFWwindow* window;
 	int width, height;
 	char* name;
+	
 public:
 	// for input
 	enum keys{
@@ -32,8 +40,11 @@ public:
 		KEY_S = 2,
 		KEY_A = 1, 
 		KEY_D = 3,
+		KEY_ENTER= 4,
 		KEY_NONE = 99
 	};
+	
+	
 	float colorX, colorY, colorZ, colorA;
 	GLfloat fov = 45.0f, near = 0.1f, far = 100.0f;
 	unsigned int VAO, VBO;
@@ -60,6 +71,12 @@ public:
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// Callbacks
+		//glfwSetCursorPosCallback(this->window, mouse_callback);
+		glfwSetCursorPosCallback(window,[](GLFWwindow *window, double x, double y){
+			printf("callbacl\n");
+			mousec = {(float)x,(float)y};
+		});
 		// Create window
 		this->window = glfwCreateWindow(800,600, this->name, NULL, NULL); // The first null is to disable fullscreen
 		if(window == NULL){
@@ -78,6 +95,9 @@ public:
 		glEnable(GL_DEPTH_TEST);
     		return 0;
 	}
+	void grabCursor(){
+		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
 	/*
 		Updates graphics, including:
 			- Background color
@@ -95,15 +115,18 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		this->view = glm::lookAt(cam->transform, cam->target, cam->up);
 		for(int i = 0; i < gObs.size(); i++){
-			glBindTexture(GL_TEXTURE_2D, gObs[i]->Tex.textureID);
+			
+			//glBindTexture(GL_TEXTURE_2D, gObs[i]->Tex.textureID);
 			glUseProgram(gObs[i]->s.shaderProg);
-			// perspective / transformation stuff  (defined in the shaders)
+			//perspective / transformation stuff  (defined in the shaders)
 			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "model"), 1, GL_FALSE, glm::value_ptr(gObs[i]->transform));
 			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "view"), 1, GL_FALSE, glm::value_ptr(this->view));
 			glUniformMatrix4fv(glGetUniformLocation(gObs[i]->s.shaderProg, "projection"), 1, GL_FALSE, glm::value_ptr(this->projection));
+			gObs[i]->model.Draw(gObs[i]->s);
 			// 
-			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0 , 36);
+			//glBindVertexArray(VAO);
+			//glDrawArrays(GL_TRIANGLES, 0 , 36);
+			//*/
 		}
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
@@ -131,16 +154,17 @@ public:
 			return KEY_S;
 		else if(glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
 			return KEY_D;
+		else if(glfwGetKey(this->window, GLFW_KEY_ENTER) == GLFW_PRESS)
+			return KEY_ENTER;
 		else
 			return KEY_NONE;
-	}
-	
+	} 
 	/*
 		Create a gameobject-
 	*/
 	void initGameObj(std::vector<GameObject*> gameObjs){
 		for(int i = 0; i < gameObjs.size(); i++){
-			printf("Proccessing %s right now, who has a size of %d\n",gameObjs[i]->name, gameObjs[i]->s.finalTypes.size());
+			/*printf("Proccessing %s right now, who has a size of %d\n",gameObjs[i]->name, gameObjs[i]->s.finalTypes.size());
 			glGenVertexArrays(1, &VAO);
 			glBindVertexArray(VAO);
 			glGenBuffers(1, &VBO); // create gl buffer for the VBO
@@ -148,21 +172,23 @@ public:
 			glBufferData(GL_ARRAY_BUFFER, sizeof(gameObjs[i]->vert), gameObjs[i]->vert, GL_STATIC_DRAW); // copy VBO to array buffer
 			for(int g = 0; g < gameObjs[i]->s.locations ; g++){
 				printf("currently at %d\n",g);
-				//glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)0);
+				//glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, /*58 * sizeof(float), (void*)0);
 				//glEnableVertexAttribArray(0);
 				// normal ?
-				//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)(3 * sizeof(float)));
+				//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, /*58 * sizeof(float), (void*)(3 * sizeof(float)));
 	    			//glEnableVertexAttribArray(1);
 	    			// texture
-	    			printf("Doin: %d, %d, %d\n",g,  gameObjs[i]->s.finalTypes[g], g * 3);
-	    			glVertexAttribPointer(g, gameObjs[i]->s.finalTypes[g], GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)(g*3 * sizeof(float)));
+	    			/*printf("Doin: %d, %d, %d\n",g,  gameObjs[i]->s.finalTypes[g], g * 3);
+	    			glVertexAttribPointer(g, gameObjs[i]->s.finalTypes[g], GL_FLOAT, GL_FALSE, /*58 * sizeof(float), (void*)(g*3 * sizeof(float)));
 	    			glEnableVertexAttribArray(g);
     			}
-    			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*5*/8 * sizeof(float), (void*)(6 * sizeof(float)));
+    			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, /*58 * sizeof(float), (void*)(6 * sizeof(float)));
 	    		glEnableVertexAttribArray(2);
 			// init texture
 			loadGLTexture(&gameObjs[i]->Tex);
-			gameObjs[i]->s.setInt("tex",gameObjs[i]->Tex.textureID);
+			gameObjs[i]->s.setInt("tex",gameObjs[i]->Tex.textureID);*/
+			
+			
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -232,7 +258,7 @@ public:
 	/*
 		Load texture
 	*/
-	void loadGLTexture(texture* Tex){
+	/*void loadGLTexture(texture* Tex){
 		glGenTextures(1, &Tex->textureID);
 		glBindTexture(GL_TEXTURE_2D, Tex->textureID); // any options applied to GL_TEXTURE_2D will be set to the Texture ID provided
 		
@@ -253,7 +279,7 @@ public:
 			printf("Failed to generate texture, texture file does not exist!\n");
 			printf("Check integrity of game files.\n");
 		}
-	}
+	}*/
 	/*
 		UI Stuff - for menus 
 	*/
@@ -265,4 +291,5 @@ public:
 		return window;
 	}
 };
+
 #endif
